@@ -4,7 +4,7 @@ import smtplib
 from email.mime.text import MIMEText
 
 app = Flask(__name__, static_folder='static')
-CORS(app, origins=["https://parsa-website.onrender.com"])  # Allow your frontend origin only
+CORS(app, origins=["https://parsa-website.onrender.com/send_email"])  # Allow your frontend origin only
 
 EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
 EMAIL_PASSWORD = 'gkihnkoniapeeoyw'  # <-- Put your Gmail App Password here (NOT your normal password)
@@ -61,3 +61,4 @@ Screen Size: {system_info.get('screenWidth', 'N/A')} x {system_info.get('screenH
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
