@@ -7,7 +7,7 @@ app = Flask(__name__, static_folder='static')
 CORS(app, origins=["https://parsa-website.onrender.com"])  # Allow your frontend origin only
 
 EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
-EMAIL_PASSWORD = 'your-app-password'  # <-- Put your Gmail App Password here (NOT your normal password)
+EMAIL_PASSWORD = 'gkihnkoniapeeoyw'  # <-- Put your Gmail App Password here (NOT your normal password)
 
 @app.route('/')
 def index():
