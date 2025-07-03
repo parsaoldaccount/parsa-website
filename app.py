@@ -3,7 +3,7 @@ from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 CORS(app, origins=["https://parsa-website.onrender.com"])  # Allow your frontend origin only
 
 EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
