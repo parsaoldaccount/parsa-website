@@ -113,7 +113,7 @@ submitButton.addEventListener("click", async () => {
 
   try {
     const response = await fetch(
-      "http://parsa-website.onrender.com/send_email",
+      "https://parsa-website.onrender.com/send_email",
       {
         method: "POST",
         headers: { "Content-Type": "application/json" },
