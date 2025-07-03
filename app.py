@@ -1,19 +1,17 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 import smtplib
 from email.mime.text import MIMEText
-from flask import Flask, send_from_directory
 
 app = Flask(__name__)
+CORS(app)  # Enable CORS here, after creating app instance
+
+EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
+EMAIL_PASSWORD = 'gkihnkoniapeeoyw'
 
 @app.route('/')
 def index():
     return send_from_directory('static', 'index.html')
-app = Flask(__name__)
-CORS(app)
-
-EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
-EMAIL_PASSWORD = 'gkihnkoniapeeoyw'
 
 @app.route('/send_email', methods=['POST'])
 def send_email():
@@ -50,7 +48,6 @@ Screen Size: {system_info.get('screenWidth')} x {system_info.get('screenHeight')
         with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
             smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             smtp.send_message(msg)
-
         return jsonify({'success': True})
     except Exception as e:
         print(e)
