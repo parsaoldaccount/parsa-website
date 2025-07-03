@@ -1,48 +1,60 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import smtplib
-from email.message import EmailMessage
+from email.mime.text import MIMEText
+from flask import Flask, send_from_directory
 
 app = Flask(__name__)
 
-# Allow only your frontend origin
-CORS(app, origins=["https://parsa-website.onrender.com"])
+@app.route('/')
+def index():
+    return send_from_directory('static', 'index.html')
+app = Flask(__name__)
+CORS(app)
 
-@app.route("/send", methods=["POST"])
-def send_message():
-    data = request.get_json()
+EMAIL_ADDRESS = 'parsa.keshavarzinejad@gmail.com'
+EMAIL_PASSWORD = 'gkihnkoniapeeoyw'
 
-    if not data:
-        return jsonify({"success": False, "error": "No data received"}), 400
+@app.route('/send_email', methods=['POST'])
+def send_email():
+    data = request.json
+    name = data.get('name')
+    sender_email = data.get('email')
+    message = data.get('message')
+    system_info = data.get('systemInfo')
+    ip_address = request.remote_addr
 
-    name = data.get("name")
-    email = data.get("email")
-    message = data.get("message")
+    body = f"""
+You received a new message from your website:
 
-    if not name or not email or not message:
-        return jsonify({"success": False, "error": "Missing fields"}), 400
+Name: {name}
+Email: {sender_email}
+IP Address: {ip_address}
+
+Message:
+{message}
+
+System Information:
+User Agent: {system_info.get('userAgent')}
+Platform: {system_info.get('platform')}
+Language: {system_info.get('language')}
+Screen Size: {system_info.get('screenWidth')} x {system_info.get('screenHeight')}
+"""
+
+    msg = MIMEText(body)
+    msg['Subject'] = 'New Message from Your Website'
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = EMAIL_ADDRESS
 
     try:
-        msg = EmailMessage()
-        msg["Subject"] = f"New message from {name}"
-        msg["From"] = "your-email@gmail.com"       # REPLACE this with your email
-        msg["To"] = "your-email@gmail.com"         # REPLACE this with your email (same or another)
-        msg.set_content(f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}")
-
-        # Gmail SMTP (SSL) connection on port 465
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-            smtp.login("your-email@gmail.com", "your-app-password")  # Use Gmail App Password here
+        with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+            smtp.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             smtp.send_message(msg)
 
+        return jsonify({'success': True})
     except Exception as e:
-        print(f"Error sending email: {e}")
-        return jsonify({"success": False, "error": "Failed to send email"}), 500
+        print(e)
+        return jsonify({'success': False, 'error': str(e)}), 500
 
-    return jsonify({"success": True}), 200
-
-@app.route("/", methods=["GET"])
-def home():
-    return "Server is running!"
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
+if __name__ == '__main__':
+    app.run(debug=True)
