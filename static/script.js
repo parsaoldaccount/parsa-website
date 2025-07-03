@@ -67,7 +67,7 @@ function isValidEmail(email) {
 }
 
 const submitButton = document.getElementById("submit");
-
+const isMobile = window.innerWidth <= 786;
 const systemInfo = {
   userAgent: navigator.userAgent,
   platform: navigator.platform,
@@ -82,52 +82,61 @@ submitButton.addEventListener("click", async () => {
   const message = document.getElementById("Message").value.trim();
 
   if (!name) {
-    submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    if (!isMobile)
+      submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    else submitButton.style = "background-color: rgb(239,68,68); width: 70%";
     submitButton.textContent = "Please enter your Name";
     return;
   }
 
   if (!isValidEmail(email)) {
-    submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    if (!isMobile)
+      submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    else submitButton.style = "background-color: rgb(239,68,68); width: 65%";
     submitButton.textContent = "Invalid Email Address";
     return;
   }
 
   if (!message) {
-    submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    if (!isMobile)
+      submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    else submitButton.style = "background-color: rgb(239,68,68); width: 70%";
     submitButton.textContent = "Please enter a message";
     return;
   }
 
   // Immediate feedback while sending
-  submitButton.style = "background-color: rgb(255, 197, 47); width: 50%";
+  submitButton.style = "background-color: rgb(255, 197, 47); width: 35%;";
   submitButton.textContent = "Sending...";
   submitButton.disabled = true;
+  submitButton.style = "color: rgba(0,0,0,0.8)";
 
   try {
-    const response = await fetch("http://127.0.0.1:5000/send_email", {
+    fetch("https://your-app-name.onrender.com/send", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        name,
-        email,
-        message,
-        systemInfo,
-      }),
+      body: JSON.stringify({ name, email, message }),
     });
 
     const result = await response.json();
 
     if (result.success) {
-      submitButton.style = "background-color: rgb(34, 197, 94); width: 50%";
+      if (!isMobile)
+        submitButton.style = "background-color: rgb(34, 197, 94); width: 50%";
+      else
+        submitButton.style = "background-color: rgb(34, 197, 94); width: 70%";
       submitButton.textContent = "Message sent successfully";
     } else {
-      submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+      if (!isMobile)
+        submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+      else submitButton.style = "background-color: rgb(239,68,68); width: 70%";
       submitButton.textContent = "Failed to send message";
     }
   } catch (error) {
     console.error(error);
-    submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    if (!isMobile)
+      submitButton.style = "background-color: rgb(239,68,68); width: 40%";
+    else submitButton.style = "background-color: rgb(239,68,68); width: 70%";
     submitButton.textContent = "Failed to send message";
   } finally {
     submitButton.disabled = false;
