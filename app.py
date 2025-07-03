@@ -25,19 +25,17 @@ def send_message():
     try:
         msg = EmailMessage()
         msg["Subject"] = f"New message from {name}"
-        msg["From"] = "your-email@gmail.com"  # YOUR EMAIL HERE
-        msg["To"] = "your-email@gmail.com"    # YOUR EMAIL HERE (can be same)
-
-        # Email body content
+        msg["From"] = "your-email@gmail.com"       # REPLACE this with your email
+        msg["To"] = "your-email@gmail.com"         # REPLACE this with your email (same or another)
         msg.set_content(f"Name: {name}\nEmail: {email}\n\nMessage:\n{message}")
 
-        # Connect to Gmail SMTP server and send email
+        # Gmail SMTP (SSL) connection on port 465
         with smtplib.SMTP_SSL("smtp.gmail.com", 465) as smtp:
-            smtp.login("your-email@gmail.com", "your-app-password")  # Use App Password here!
+            smtp.login("your-email@gmail.com", "your-app-password")  # Use Gmail App Password here
             smtp.send_message(msg)
 
     except Exception as e:
-        print(f"Email sending error: {e}")
+        print(f"Error sending email: {e}")
         return jsonify({"success": False, "error": "Failed to send email"}), 500
 
     return jsonify({"success": True}), 200
