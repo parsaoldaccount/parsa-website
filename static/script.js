@@ -112,10 +112,15 @@ submitButton.addEventListener("click", async () => {
   submitButton.style = "color: rgba(0,0,0,0.8)";
 
   try {
-    fetch("https://your-app-name.onrender.com/send", {
+    const response = await fetch("http://127.0.0.1:5000/send_email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
+      body: JSON.stringify({
+        name,
+        email,
+        message,
+        systemInfo,
+      }),
     });
 
     const result = await response.json();
