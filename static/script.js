@@ -88,7 +88,7 @@ submitButton.addEventListener("click", async () => {
   submitButton.disabled = true;
 
   try {
-    const response = await fetch("https://your-app-name.onrender.com/send", {
+    const response = await fetch("https://your-app-name.onrender.com", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
